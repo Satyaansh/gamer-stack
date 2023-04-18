@@ -27,6 +27,11 @@ public class AuthController {
         return new ResponseEntity<>("Account Registration Successful",HttpStatus.OK);
     }
 
+    @PostMapping("/login")
+    public AuthenticationResonse login(@RequestBody LoginRequest loginRequest) {
+        return authService.login(loginRequest);
+    }
+
     @GetMapping("/accountVerification/{token}")
     public ResponseEntity verifyAccount(@PathVariable String token) {
         authService.verifyAccount(token);
