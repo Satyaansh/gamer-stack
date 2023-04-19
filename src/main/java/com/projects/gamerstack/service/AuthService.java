@@ -1,10 +1,17 @@
 package com.projects.gamerstack.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.authentication.AuthenticationManager;
 
+import com.projects.gamerstack.dto.AuthenticationResponse;
+import com.projects.gamerstack.dto.LoginRequest;
 import com.projects.gamerstack.dto.RegisterRequest;
 import com.projects.gamerstack.exception.GamerStackException;
 import com.projects.gamerstack.model.NotificationEmail;
@@ -31,6 +38,8 @@ public class AuthService {
     private final VerificationTokenRepository verificationTokenRepository;
     private final MailContentBuilder mailContentBuilder;
     private final MailService mailService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtProvider jwtProvider;
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
@@ -76,6 +85,13 @@ public class AuthService {
         User user = userRepository.findById(userid).orElseThrow(() -> new GamerStackException("User not found with id : " + userid));
         user.setEnabled(true);
         userRepository.save(user);
+    }
+
+    public AuthenticationResponse login(LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String authenticationToken = jwtProvider.generateToken(authentication);
+        return new AuthenticationResponse(authenticationToken, loginRequest.getUsername());
     }
     
 }

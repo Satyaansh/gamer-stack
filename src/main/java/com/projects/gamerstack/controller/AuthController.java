@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.projects.gamerstack.dto.AuthenticationResponse;
+import com.projects.gamerstack.dto.LoginRequest;
 import com.projects.gamerstack.dto.RegisterRequest;
 import com.projects.gamerstack.service.AuthService;
 
@@ -28,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public AuthenticationResonse login(@RequestBody LoginRequest loginRequest) {
+    public AuthenticationResponse login(@RequestBody LoginRequest loginRequest) {
         return authService.login(loginRequest);
     }
 
