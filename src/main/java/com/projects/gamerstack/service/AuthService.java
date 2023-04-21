@@ -19,6 +19,7 @@ import com.projects.gamerstack.model.User;
 import com.projects.gamerstack.model.VerificationToken;
 import com.projects.gamerstack.repository.UserRepository;
 import com.projects.gamerstack.repository.VerificationTokenRepository;
+import com.projects.gamerstack.security.JwtProvider;
 import com.projects.gamerstack.util.Constants;
 
 import lombok.AllArgsConstructor;

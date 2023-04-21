@@ -34,6 +34,9 @@ dependencies {
 	//JWT related dependencies
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.10.5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.10.5'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.10.5'
+	implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.10.5'
+	
 
 	//Kotlin dependencies for Displaying time as Relative Time Ago
 	implementation group: 'com.github.marlonlom', name: 'timeago', version: '4.0.0'
