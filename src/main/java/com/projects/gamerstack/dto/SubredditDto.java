@@ -14,5 +14,5 @@ public class SubredditDto {
     private Long id;
     private String name;
     private String Description;
-    private Long postCount;
+    private Long numberOfPosts;
 }
