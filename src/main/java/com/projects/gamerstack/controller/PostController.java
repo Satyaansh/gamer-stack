@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projects.gamerstack.dto.PostRequest;
+import com.projects.gamerstack.dto.PostResponse;
+import com.projects.gamerstack.service.PostService;
 
 import lombok.AllArgsConstructor;
 
