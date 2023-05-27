@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.projects.gamerstack.dto.CommentDto;
+import com.projects.gamerstack.service.CommentService;
+
 import lombok.AllArgsConstructor;
 
 @RestController
