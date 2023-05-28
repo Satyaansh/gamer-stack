@@ -29,12 +29,12 @@ public class CommentsController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping(params = "postId")
     public ResponseEntity<List<CommentDto>> getAllCommentsForPost(@RequestParam("postId") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(commentService.getCommentsByPostId(id));
     }
 
-    @GetMapping
+    @GetMapping(params = "userName")
     public ResponseEntity<List<CommentDto>> getAllCommentsByUser(@RequestParam("userName") String userName) {
         return ResponseEntity.status(HttpStatus.OK).body(commentService.getCommentsByUser(userName));
     }
