@@ -13,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 
 import com.projects.gamerstack.dto.AuthenticationResponse;
 import com.projects.gamerstack.dto.LoginRequest;
+import com.projects.gamerstack.dto.RefreshTokenRequest;
 import com.projects.gamerstack.dto.RegisterRequest;
 import com.projects.gamerstack.exception.GamerStackException;
 import com.projects.gamerstack.model.NotificationEmail;
@@ -32,7 +33,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-@Slf4j
+@Transactional
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -42,6 +43,7 @@ public class AuthService {
     private final MailService mailService;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
+    private final RefreshTokenService refreshTokenService;
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
@@ -93,7 +95,12 @@ public class AuthService {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String authenticationToken = jwtProvider.generateToken(authentication);
-        return new AuthenticationResponse(authenticationToken, loginRequest.getUsername());
+        return AuthenticationResponse.builder()
+                        .authenticationToken(authenticationToken)
+                        .username(loginRequest.getUsername())
+                        .refreshToken(refreshTokenService.generaRefreshToken().getToken())
+                        .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                        .build();
     }
 
     @Transactional(readOnly = true) 
@@ -103,6 +110,18 @@ public class AuthService {
 
         return userRepository.findByUsername(principal.getUsername())
                         .orElseThrow(() -> new UsernameNotFoundException("Username not found - " + principal.getUsername()));
+    }
+
+    public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        
+        refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
+        String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
+        return AuthenticationResponse.builder()
+                        .authenticationToken(token)
+                        .username(refreshTokenRequest.getUsername())
+                        .refreshToken(refreshTokenRequest.getRefreshToken())
+                        .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
+                        .build();
     }
     
 }
